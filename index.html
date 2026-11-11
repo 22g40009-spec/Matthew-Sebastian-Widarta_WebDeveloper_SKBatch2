@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karier di Sekolah Karir — Posisi Terbuka</title>
+  <meta name="description" content="Lihat posisi yang sedang terbuka di Sekolah Karir dan kirim lamaranmu. Halaman demo untuk mini assignment Web Developer.">
+
+  <!-- Halaman demo berisi mock data, jadi tidak perlu masuk hasil pencarian. -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#121a33">
+
+  <!-- Pratinjau saat link dibagikan (WhatsApp, LinkedIn, dll.) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:site_name" content="Sekolah Karir">
+  <meta property="og:title" content="Karier di Sekolah Karir — Posisi Terbuka">
+  <meta property="og:description" content="Lihat posisi yang sedang terbuka dan kirim lamaranmu.">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Menyalakan loader hanya kalau JavaScript aktif, supaya tanpa JS halaman tidak tertutup. -->
+  <script>document.documentElement.classList.add('is-loading');</script>
+
+  <!-- Satu keluarga font; kalau gagal dimuat, halaman tetap memakai font sistem. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+
+  <!-- Bootstrap 5.3.3: versi dikunci dan diverifikasi dengan integrity hash. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Gaya sendiri dimuat setelah Bootstrap supaya bisa menimpa tema bawaannya. -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Script klasik (bukan ES module) supaya halaman tetap jalan saat dibuka langsung dari file. -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/site.js" defer></script>
+  <script src="js/forms.js" defer></script>
+</head>
+<body id="top">
+  <!-- Loader: tampil sampai halaman selesai dimuat (diatur di js/site.js) -->
+  <div class="page-loader" id="page-loader">
+    <div class="spinner-border" role="status" aria-hidden="true"></div>
+    <p class="page-loader__text" id="loader-text" role="status">Memuat halaman…</p>
+  </div>
+
+  <a class="skip-link" href="#posisi">Langsung ke daftar posisi</a>
+
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-md" aria-label="Navigasi utama">
+      <div class="container">
+        <!-- Mobile: tombol ini membuka sidebar #side-nav. Posisinya di kiri,
+             searah dengan sisi munculnya sidebar. -->
+        <button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#side-nav"
+                aria-controls="side-nav" aria-label="Buka menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand me-auto" href="#top">
+          <img src="favicon.svg" alt="" width="32" height="32">
+          Sekolah Karir
+        </a>
+        <!-- Tablet dan desktop (≥ md, 768px): link tampil sejajar di navbar -->
+        <ul class="navbar-nav ms-auto align-items-center gap-1 gap-lg-2 d-none d-md-flex">
+          <li class="nav-item"><a class="nav-link" href="#posisi">Posisi terbuka</a></li>
+          <li class="nav-item"><a class="nav-link" href="#proses">Proses seleksi</a></li>
+          <li class="nav-item"><a class="nav-link" href="#konsultasi">Konsultasi</a></li>
+          <li class="nav-item ms-1 ms-lg-2">
+            <a class="btn btn-primary rounded-pill" href="#posisi">Lamar sekarang</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Sidebar navigasi untuk mobile. Diletakkan di luar <header> karena header yang sticky
+       membentuk lapisan (stacking context) sendiri; kalau sidebar ada di dalamnya,
+       sidebar akan ikut tertutup backdrop yang seharusnya hanya menutupi halaman. -->
+  <div class="offcanvas offcanvas-start side-nav" tabindex="-1" id="side-nav" aria-labelledby="side-nav-title">
+    <div class="offcanvas-header">
+      <h2 class="offcanvas-title side-nav__title" id="side-nav-title">Menu</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Tutup menu"></button>
+    </div>
+    <nav class="offcanvas-body d-flex flex-column" aria-label="Navigasi mobile">
+      <ul class="side-nav__list">
+        <li><a href="#posisi">Posisi terbuka</a></li>
+        <li><a href="#proses">Proses seleksi</a></li>
+        <li><a href="#konsultasi">Konsultasi</a></li>
+        <li><a href="#kontak">Kontak</a></li>
+      </ul>
+      <a class="btn btn-primary btn-lg rounded-pill mt-4" href="#posisi">Lamar sekarang</a>
+      <p class="side-nav__note mt-auto">
+        <strong>Catatan:</strong> halaman ini adalah mockup untuk mini assignment.
+        Tombol "Lamar" dan "Kirim CV" hanya membuka draf email ke alamat contoh,
+        dan form konsultasi serta newsletter tidak mengirim atau menyimpan data.
+      </p>
+    </nav>
+  </div>
+
+  <main>
+    <section class="careers" aria-labelledby="careers-title">
+      <div class="container">
+
+        <!-- Intro: headline + CTA utama -->
+        <div class="row align-items-center g-4 g-lg-5">
+          <div class="col-lg-7">
+            <p class="eyebrow">
+              <span class="eyebrow__dot" aria-hidden="true"></span>
+              Kami sedang merekrut
+            </p>
+            <h1 class="intro__title" id="careers-title">
+              Bantu lebih banyak orang menemukan
+              <span class="highlight">karier yang tepat</span>.
+            </h1>
+            <p class="intro__lead">
+              Sekolah Karir membangun website, tools, dan produk digital untuk pencari kerja.
+              Kami mencari orang yang senang memecahkan masalah secara praktis dan mau belajar cepat.
+            </p>
+            <div class="d-grid d-sm-flex gap-3 mt-4">
+              <a class="btn btn-primary btn-lg rounded-pill" href="#posisi">Lihat posisi terbuka</a>
+              <a class="btn btn-outline-dark btn-lg rounded-pill" href="mailto:karir@sekolahkarir.example?subject=Lamaran%20umum">Kirim CV umum</a>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <!-- .decor menambah hiasan di belakang kartu: blok warna, garis, dan kisi titik (lihat style.css) -->
+            <div class="decor">
+            <span class="decor__dots" aria-hidden="true"></span>
+            <aside class="steps" id="proses" aria-labelledby="steps-title">
+              <h2 class="steps__title" id="steps-title">Proses seleksi</h2>
+              <ol class="steps__list">
+                <li>
+                  <strong>Kirim lamaran</strong>
+                  <span>Pilih posisi, lalu kirim CV dan portofolio.</span>
+                </li>
+                <li>
+                  <strong>Mini assignment</strong>
+                  <span>Tugas kecil, sekitar 90–120 menit pengerjaan.</span>
+                </li>
+                <li>
+                  <strong>Interview</strong>
+                  <span>Ngobrol dengan tim tentang cara kamu berpikir.</span>
+                </li>
+              </ol>
+            </aside>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daftar posisi: filter dan kartu diisi oleh js/main.js dari js/data.js -->
+        <div class="roles" id="posisi">
+          <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2">
+            <h2 class="roles__title">Posisi terbuka</h2>
+            <p class="roles__count" id="role-count" aria-live="polite"></p>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2 mt-3" id="role-filters" role="group" aria-label="Filter posisi berdasarkan tim"></div>
+
+          <!-- Grid Bootstrap: 1 kolom di ponsel, 2 di tablet (md), 3 di desktop (lg) -->
+          <ul class="row g-3 mt-2" id="role-list"></ul>
+
+          <noscript>
+            <p class="notice">
+              Daftar posisi membutuhkan JavaScript. Kamu tetap bisa melamar lewat email ke
+              <a href="mailto:karir@sekolahkarir.example">karir@sekolahkarir.example</a>.
+            </p>
+          </noscript>
+        </div>
+
+        <!-- CTA penutup -->
+        <div class="cta-band row align-items-center g-4 mx-0">
+          <div class="col-md">
+            <h2 class="cta-band__title">Belum ada posisi yang cocok?</h2>
+            <p class="cta-band__text">Kirim CV kamu. Kami akan menghubungi saat ada posisi yang sesuai.</p>
+          </div>
+          <div class="col-md-auto d-grid">
+            <a class="btn btn-warning btn-lg rounded-pill" href="mailto:karir@sekolahkarir.example?subject=Lamaran%20umum">Kirim CV kamu</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Ajakan konsultasi untuk pengunjung yang belum tahu mau berkarier di bidang apa -->
+    <section class="help" aria-labelledby="help-title">
+      <div class="container">
+        <div class="help-card">
+          <span class="help-card__dots" aria-hidden="true"></span>
+          <p class="eyebrow">
+            <span class="eyebrow__dot" aria-hidden="true"></span>
+            Konsultasi karier
+          </p>
+          <h2 class="section-title" id="help-title">Masih bingung mau berkarier di bidang apa?</h2>
+          <p class="help-card__text">
+            Itu wajar. Ceritakan latar belakang dan minatmu, lalu tim Sekolah Karir membantu
+            memetakan pilihan yang masuk akal, dari bidang yang cocok sampai langkah pertama yang bisa kamu ambil.
+          </p>
+          <div class="d-grid d-sm-flex gap-3 mt-4">
+            <a class="btn btn-primary btn-lg rounded-pill" href="#konsultasi">Konsultasi sekarang</a>
+            <a class="btn btn-outline-dark btn-lg rounded-pill" href="mailto:halo@sekolahkarir.example?subject=Pertanyaan%20karier">Tanya lewat email</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form kontak konsultasi. Validasi dan pesan hasilnya diatur js/forms.js -->
+    <section class="consult" id="konsultasi" aria-labelledby="consult-title">
+      <div class="container">
+        <div class="row g-4 g-lg-5">
+          <div class="col-lg-5">
+            <h2 class="section-title" id="consult-title">Ceritakan kebutuhanmu</h2>
+            <p class="consult__lead">
+              Isi form ini dan kami akan menghubungimu lewat email untuk mengatur jadwal konsultasi.
+            </p>
+            <ol class="steps__list consult__steps">
+              <li>
+                <strong>Isi form</strong>
+                <span>Cukup data kontak dan cerita singkat tentang situasimu.</span>
+              </li>
+              <li>
+                <strong>Kami balas lewat email</strong>
+                <span>Tim kami membaca ceritamu dan menawarkan jadwal.</span>
+              </li>
+              <li>
+                <strong>Sesi konsultasi</strong>
+                <span>Ngobrol online tentang pilihan karier dan langkah berikutnya.</span>
+              </li>
+            </ol>
+          </div>
+
+          <div class="col-lg-7">
+            <!-- novalidate: pesan error memakai gaya Bootstrap, bukan balon bawaan browser -->
+            <form class="form-card" id="consult-form" novalidate data-mock-form
+                  data-success="Form terisi dengan benar. Ini halaman mockup, jadi datamu tidak dikirim atau disimpan. Di versi asli, tim Sekolah Karir akan membalas lewat email.">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="consult-name">Nama lengkap</label>
+                  <input class="form-control" id="consult-name" name="name" type="text"
+                         autocomplete="name" placeholder="Contoh: Budi Santoso" required>
+                  <div class="invalid-feedback">Isi nama lengkapmu.</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="consult-email">Email</label>
+                  <input class="form-control" id="consult-email" name="email" type="email"
+                         autocomplete="email" placeholder="Contoh: nama@email.com" required>
+                  <div class="invalid-feedback">Isi alamat email yang valid, misalnya nama@email.com.</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="consult-phone">Nomor WhatsApp <span class="form-optional">(opsional)</span></label>
+                  <input class="form-control" id="consult-phone" name="phone" type="tel"
+                         autocomplete="tel" inputmode="tel" placeholder="Contoh: 0812 3456 7890">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="consult-topic">Topik konsultasi</label>
+                  <select class="form-select" id="consult-topic" name="topic" required>
+                    <option value="" selected disabled>Pilih topik</option>
+                    <option>Bingung memilih bidang karier</option>
+                    <option>Pindah karier</option>
+                    <option>Review CV dan portofolio</option>
+                    <option>Persiapan interview</option>
+                    <option>Lainnya</option>
+                  </select>
+                  <div class="invalid-feedback">Pilih salah satu topik.</div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="consult-message">Ceritakan situasimu</label>
+                  <textarea class="form-control" id="consult-message" name="message" rows="4"
+                            placeholder="Contoh: Saya lulusan akuntansi, tertarik ke bidang data, tapi belum tahu harus mulai dari mana." required></textarea>
+                  <div class="invalid-feedback">Tulis cerita singkat supaya kami bisa menyiapkan sesi yang tepat.</div>
+                </div>
+              </div>
+
+              <button class="btn btn-primary btn-lg rounded-pill mt-4" type="submit">Kirim permintaan konsultasi</button>
+              <p class="form-note">Dengan mengirim form ini, kamu setuju dihubungi lewat kontak yang kamu isi.</p>
+              <p class="form-status" role="status" aria-live="polite" hidden></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Langganan newsletter -->
+    <section class="newsletter" aria-labelledby="newsletter-title">
+      <div class="container">
+        <div class="newsletter-card row align-items-center g-4 mx-0">
+          <div class="col-lg-6">
+            <h2 class="section-title" id="newsletter-title">Dapatkan info dan penawaran terbaru</h2>
+            <p class="newsletter-card__text">
+              Lowongan baru, tips karier, dan penawaran program dari Sekolah Karir, langsung ke emailmu.
+            </p>
+          </div>
+          <div class="col-lg-6">
+            <form id="newsletter-form" novalidate data-mock-form
+                  data-success="Email valid. Ini halaman mockup, jadi alamatmu tidak didaftarkan atau disimpan.">
+              <label class="form-label" for="newsletter-email">Alamat email</label>
+              <div class="d-grid d-sm-flex gap-2 align-items-start">
+                <div class="flex-grow-1">
+                  <input class="form-control" id="newsletter-email" name="email" type="email"
+                         autocomplete="email" placeholder="Contoh: nama@email.com" required>
+                  <div class="invalid-feedback">Isi alamat email yang valid.</div>
+                </div>
+                <button class="btn btn-primary rounded-pill px-4" type="submit">Berlangganan</button>
+              </div>
+              <p class="form-note">Bisa berhenti berlangganan kapan saja.</p>
+              <p class="form-status" role="status" aria-live="polite" hidden></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="kontak">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-5">
+          <a class="site-footer__brand" href="#top">
+            <img src="favicon.svg" alt="" width="32" height="32">
+            Sekolah Karir
+          </a>
+          <p class="site-footer__tagline">
+            Website, tools, dan produk digital untuk membantu pencari kerja menemukan karier yang tepat.
+          </p>
+        </div>
+
+        <nav class="col-sm-6 col-lg-3" aria-labelledby="footer-nav-title">
+          <h2 class="site-footer__heading" id="footer-nav-title">Navigasi</h2>
+          <ul class="site-footer__list">
+            <li><a href="#posisi">Posisi terbuka</a></li>
+            <li><a href="#proses">Proses seleksi</a></li>
+            <li><a href="#konsultasi">Konsultasi</a></li>
+            <li><a href="#top">Kembali ke atas</a></li>
+          </ul>
+        </nav>
+
+        <div class="col-sm-6 col-lg-4">
+          <h2 class="site-footer__heading">Kontak rekrutmen</h2>
+          <address class="site-footer__list">
+            <a href="mailto:karir@sekolahkarir.example">karir@sekolahkarir.example</a><br>
+            Senin–Jumat, 09.00–17.00 WIB<br>
+            Jakarta, Indonesia
+          </address>
+        </div>
+      </div>
+
+      <div class="site-footer__bottom">
+        <p>&copy; <span id="footer-year">2026</span> Sekolah Karir. Halaman mockup mini assignment: posisi dan kontak adalah mock data, dan tombol CTA maupun form tidak mengirim data sungguhan.</p>
+        <!-- Diisi js/site.js: waktu muat halaman dan jumlah lag yang terdeteksi -->
+        <p class="perf" id="perf-status" data-level="pending">
+          <span class="perf__dot" aria-hidden="true"></span>
+          <span id="perf-text">Mengukur performa…</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cetakan satu kartu posisi. main.js menyalin ini untuk setiap item di ROLES. -->
+  <template id="role-card-template">
+    <li class="col-12 col-md-6 col-lg-4">
+      <article class="role-card h-100">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+          <span class="tag" data-field="team"></span>
+          <span class="role-card__type" data-field="type"></span>
+        </div>
+        <h3 class="role-card__title" data-field="title"></h3>
+        <p class="role-card__summary" data-field="summary"></p>
+        <ul class="role-card__meta">
+          <li data-field="location"></li>
+          <li data-field="level"></li>
+        </ul>
+        <a class="role-card__cta" data-field="apply">
+          Lamar posisi ini <span aria-hidden="true">→</span>
+        </a>
+      </article>
+    </li>
+  </template>
+</body>
+</html>

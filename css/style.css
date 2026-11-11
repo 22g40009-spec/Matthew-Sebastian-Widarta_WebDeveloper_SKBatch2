@@ -1,0 +1,886 @@
+/* ==========================================================================
+   Recruitment section — Sekolah Karir (mini assignment)
+   Bootstrap 5 menangani grid, navbar, tombol, dan utility responsive.
+   File ini hanya berisi tema dan komponen yang tidak ada di Bootstrap.
+   Urutan: token → tema Bootstrap → dasar → loader → navbar → section → footer.
+   ========================================================================== */
+
+/* ---------- Token desain ---------- */
+:root {
+  --color-bg: #f7f5f0;
+  --color-surface: #ffffff;
+  --color-ink: #121a33;
+  --color-muted: #55607a;
+  --color-border: #e3dfd5;
+  --color-primary: #2743e8;
+  --color-primary-dark: #1b31b8;
+  --color-primary-soft: #e9ecff;
+  --color-primary-light: #7f93ff;
+  --color-accent: #ffc940;
+  --color-accent-dark: #f2b71c;
+  --color-on-dark-muted: #c9cfe0;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgb(18 26 51 / 0.04), 0 8px 24px rgb(18 26 51 / 0.06);
+  --shadow-card-hover: 0 2px 4px rgb(18 26 51 / 0.06), 0 16px 32px rgb(18 26 51 / 0.1);
+
+  --tap-target: 2.75rem; /* 44px, ukuran minimum area sentuh */
+  --navbar-height: 4.5rem;
+
+  /* Tema Bootstrap: font dan warna dasar mengikuti token di atas. */
+  --bs-body-font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --bs-body-color: var(--color-ink);
+  --bs-body-bg: var(--color-bg);
+  --bs-body-line-height: 1.6;
+}
+
+/* ---------- Tema tombol Bootstrap ---------- */
+.btn {
+  --bs-btn-font-weight: 700;
+  min-height: var(--tap-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-lg {
+  --bs-btn-font-size: 1rem;
+  --bs-btn-padding-x: 1.5rem;
+  --bs-btn-padding-y: 0.75rem;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary-dark);
+  --bs-btn-hover-border-color: var(--color-primary-dark);
+  --bs-btn-active-bg: var(--color-primary-dark);
+  --bs-btn-active-border-color: var(--color-primary-dark);
+}
+
+.btn-outline-dark {
+  --bs-btn-color: var(--color-ink);
+  --bs-btn-border-color: var(--color-ink);
+  --bs-btn-hover-bg: var(--color-ink);
+  --bs-btn-hover-border-color: var(--color-ink);
+  --bs-btn-active-bg: var(--color-ink);
+  --bs-btn-border-width: 2px;
+}
+
+.btn-warning {
+  --bs-btn-color: var(--color-ink);
+  --bs-btn-bg: var(--color-accent);
+  --bs-btn-border-color: var(--color-accent);
+  --bs-btn-hover-color: var(--color-ink);
+  --bs-btn-hover-bg: var(--color-accent-dark);
+  --bs-btn-hover-border-color: var(--color-accent-dark);
+  --bs-btn-active-bg: var(--color-accent-dark);
+}
+
+/* ---------- Dasar ---------- */
+html {
+  scroll-behavior: smooth;
+  /* Supaya target anchor tidak tertutup navbar yang menempel di atas. */
+  scroll-padding-top: calc(var(--navbar-height) + 1rem);
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+address {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 1100;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-ink);
+  color: #fff;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ---------- Loader ----------
+   Hanya tampil saat <html> punya class .is-loading (dipasang lewat JS).
+   Animasi loader-failsafe menyembunyikannya sendiri setelah 8 detik,
+   jadi halaman tidak akan tertutup selamanya walau script gagal dimuat. */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+
+.is-loading .page-loader {
+  display: flex;
+  animation: loader-failsafe 0.3s ease 8s forwards;
+}
+
+.page-loader__text {
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+@keyframes loader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---------- Navbar ---------- */
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+  background: rgb(247 245 240 / 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.navbar {
+  --bs-navbar-color: var(--color-ink);
+  --bs-navbar-hover-color: var(--color-primary);
+  --bs-navbar-nav-link-padding-x: 0.75rem;
+  min-height: var(--navbar-height);
+}
+
+.navbar-brand,
+.site-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.navbar .nav-link {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  font-weight: 600;
+}
+
+.navbar-toggler {
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  border-color: var(--color-border);
+}
+
+/* ---------- Sidebar mobile (Bootstrap offcanvas) ---------- */
+.side-nav {
+  /* Lebih sempit dari layar supaya sebagian halaman tetap terlihat di sampingnya. */
+  --bs-offcanvas-width: min(19rem, 80vw);
+  --bs-offcanvas-bg: var(--color-surface);
+  --bs-offcanvas-padding-x: 1.25rem;
+}
+
+.side-nav__title {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.side-nav .btn-close {
+  width: var(--tap-target);
+  height: var(--tap-target);
+  padding: 0;
+}
+
+.side-nav__list a {
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.side-nav__list a:hover {
+  color: var(--color-primary);
+}
+
+.side-nav__note {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.side-nav__note strong {
+  color: var(--color-ink);
+}
+
+/* Bagian halaman yang tidak tertutup sidebar digelapkan dan diblur tipis.
+   Bootstrap menganimasikan opacity backdrop, jadi blurnya ikut muncul halus. */
+.offcanvas-backdrop {
+  background-color: var(--color-ink);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.offcanvas-backdrop.show {
+  opacity: 0.35;
+}
+
+/* ---------- Section ---------- */
+.careers {
+  padding-block: 3rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.eyebrow__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.intro__title {
+  font-size: clamp(2rem, 1.2rem + 3.6vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Sorotan kuning di belakang teks, tetap rapi saat teks pindah baris. */
+.highlight {
+  background: linear-gradient(transparent 62%, var(--color-accent) 62%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.intro__lead {
+  max-width: 34rem;
+  margin-top: 1rem;
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+}
+
+/* ---------- Hiasan geometris ----------
+   Blok warna bersudut tajam + kisi titik di belakang kartu "Proses seleksi".
+   Murni CSS (pseudo-element dan gradient), tanpa gambar, jadi tidak menambah
+   request dan tidak dibaca oleh pembaca layar. */
+.decor {
+  position: relative;
+  z-index: 0; /* lapisan sendiri, supaya hiasan ber-z-index negatif tetap di atas latar halaman */
+  padding: 2.5rem 1.25rem 1.25rem 0;
+}
+
+/* Blok biru besar, mengintip di kanan atas kartu */
+.decor::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  width: 58%;
+  height: 72%;
+  background: var(--color-primary);
+}
+
+/* Garis biru muda, mengintip di bawah kartu */
+.decor::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: 0;
+  left: 10%;
+  width: 30%;
+  height: 2.25rem;
+  background: var(--color-primary-light);
+}
+
+/* Kisi titik: satu radial-gradient yang diulang */
+.decor__dots,
+.cta-band::before {
+  background-image: radial-gradient(currentColor 1.5px, transparent 2px);
+  background-size: 0.75rem 0.75rem;
+}
+
+.decor__dots {
+  position: absolute;
+  z-index: -1;
+  top: 0.125rem;
+  right: calc(58% + 0.75rem);
+  width: 4.5rem;
+  height: 2.25rem;
+  color: var(--color-ink);
+  opacity: 0.55;
+}
+
+/* ---------- Proses seleksi ---------- */
+.steps {
+  position: relative;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.steps__title {
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.steps__list {
+  display: grid;
+  gap: 1rem;
+  counter-reset: step;
+}
+
+.steps__list li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  column-gap: 0.75rem;
+  counter-increment: step;
+}
+
+.steps__list li::before {
+  content: counter(step);
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.steps__list span {
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Daftar posisi ---------- */
+.roles {
+  margin-top: 3rem;
+}
+
+.roles__title {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.roles__count {
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.filter {
+  min-height: var(--tap-target);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.filter:hover {
+  border-color: var(--color-ink);
+}
+
+.filter[aria-pressed="true"] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: #fff;
+}
+
+.role-card {
+  position: relative; /* jangkar untuk area klik milik .role-card__cta::after */
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.role-card:hover,
+.role-card:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.role-card__type {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.role-card__title {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.role-card__summary {
+  margin-top: 0.5rem;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.role-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.role-card__meta li {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* margin-top: auto mendorong CTA ke dasar kartu, jadi sejajar di satu baris
+   walau panjang deskripsi berbeda. */
+.role-card__cta {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Seluruh kartu bisa diklik atau disentuh, tanpa membungkus isi kartu dengan <a>. */
+.role-card__cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.role-card__cta:focus-visible {
+  outline: none;
+}
+
+.role-card__cta:focus-visible::after {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.notice {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* ---------- CTA penutup ---------- */
+.cta-band {
+  margin-top: 3rem;
+  padding: 1rem 0.75rem 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-ink);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Kisi titik di pojok kanan atas, senada dengan hiasan di intro */
+.cta-band::before {
+  content: "";
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 6rem;
+  height: 3rem;
+  padding: 0;
+  color: #fff;
+  opacity: 0.22;
+  pointer-events: none;
+  display: none; /* di ponsel judulnya sampai ke pojok ini; tampil mulai md */
+}
+
+.cta-band > * {
+  position: relative; /* isi tetap di atas hiasan */
+}
+
+.cta-band__title {
+  font-size: clamp(1.375rem, 1.1rem + 1.2vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cta-band__text {
+  margin-top: 0.5rem;
+  color: var(--color-on-dark-muted);
+}
+
+/* ---------- Judul section (dipakai konsultasi dan newsletter) ---------- */
+.section-title {
+  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* ---------- Ajakan konsultasi ---------- */
+.help {
+  padding-bottom: 3rem;
+}
+
+.help-card {
+  position: relative;
+  overflow: hidden; /* memotong hiasan yang sengaja keluar dari kartu */
+  padding: 2rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-soft);
+}
+
+/* Blok biru di pojok kanan bawah. Baru ditampilkan mulai md (lihat media query),
+   karena di ponsel tombol selebar kartu dan akan tertimpa blok ini. */
+.help-card::after {
+  content: "";
+  display: none;
+  position: absolute;
+  right: -2rem;
+  bottom: -2rem;
+  width: 7rem;
+  height: 7rem;
+  background: var(--color-primary);
+}
+
+.help-card__dots {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 4.5rem;
+  height: 3rem;
+  background-image: radial-gradient(currentColor 1.5px, transparent 2px);
+  background-size: 0.75rem 0.75rem;
+  color: var(--color-primary);
+  opacity: 0.5;
+}
+
+.help-card > :not(.help-card__dots) {
+  position: relative; /* isi tetap di atas hiasan */
+  z-index: 1;
+}
+
+.help-card .eyebrow {
+  background: var(--color-surface);
+}
+
+.help-card__text {
+  max-width: 40rem;
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+}
+
+/* ---------- Form konsultasi ---------- */
+.consult {
+  padding-block: 3rem;
+  border-block: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.consult__lead {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+}
+
+.consult__steps {
+  margin-top: 1.5rem;
+}
+
+.form-card {
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.form-label {
+  margin-bottom: 0.375rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.form-optional {
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+.form-control,
+.form-select {
+  min-height: 3rem;
+  border-color: var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+/* Teks contoh di dalam field: lebih pudar dari isi asli, tapi masih terbaca. */
+.form-control::placeholder {
+  color: #7a8399;
+  opacity: 1;
+}
+
+/* Opsi "Pilih topik" tampil sepudar placeholder sampai topik dipilih. */
+.form-select:invalid {
+  color: #7a8399;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgb(39 67 232 / 0.18);
+}
+
+.form-note {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.form-status {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #b7e4c7;
+  border-radius: var(--radius-sm);
+  background: #eafaf0;
+  color: #14532d;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+/* ---------- Newsletter ---------- */
+.newsletter {
+  padding-block: 3rem;
+}
+
+.newsletter-card {
+  padding: 1rem 0.75rem 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.newsletter-card__text {
+  margin-top: 0.5rem;
+  color: var(--color-muted);
+}
+
+.newsletter-card .btn {
+  min-height: 3rem;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  padding-block: 3rem 1.5rem;
+  background: var(--color-ink);
+  color: var(--color-on-dark-muted);
+  font-size: 0.9375rem;
+}
+
+.site-footer__brand {
+  color: #fff;
+}
+
+.site-footer__tagline {
+  max-width: 24rem;
+  margin-top: 0.75rem;
+}
+
+.site-footer__heading {
+  margin-bottom: 0.75rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.site-footer__list {
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+.site-footer__list a {
+  text-decoration: none;
+}
+
+.site-footer__list a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.site-footer :focus-visible {
+  outline-color: var(--color-accent);
+}
+
+.site-footer__bottom p:first-child {
+  flex: 1 1 20rem;
+}
+
+.site-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  font-size: 0.8125rem;
+}
+
+/* Indikator performa: warna titik mengikuti data-level yang diisi js/site.js. */
+.perf {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.perf__dot {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-on-dark-muted);
+}
+
+.perf[data-level="good"] .perf__dot {
+  background: #3ddc84;
+}
+
+.perf[data-level="ok"] .perf__dot {
+  background: var(--color-accent);
+}
+
+.perf[data-level="slow"] .perf__dot {
+  background: #ff6b6b;
+}
+
+/* ---------- ≥ md (768px) ---------- */
+@media (min-width: 768px) {
+  .help-card {
+    padding: 3rem;
+  }
+
+  .help-card::after,
+  .cta-band::before {
+    display: block;
+  }
+
+  .form-card {
+    padding: 2rem;
+  }
+
+  .newsletter-card {
+    padding: 1.5rem 2rem 2.5rem;
+  }
+
+  .cta-band {
+    padding: 1.5rem 2rem 2.5rem;
+  }
+}
+
+/* ---------- ≥ lg (992px) ---------- */
+@media (min-width: 992px) {
+  .careers {
+    padding-block: 4rem;
+  }
+
+  .steps {
+    padding: 2rem;
+  }
+
+  .roles {
+    margin-top: 4rem;
+  }
+}
+
+/* ---------- Hormati preferensi pengguna yang mengurangi animasi ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .role-card,
+  .filter {
+    transition: none;
+  }
+}
